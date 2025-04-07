@@ -3,13 +3,14 @@ import ActionOption from "./ActionOption";
 import { format } from "date-fns";
 import { Badge } from "./ui/badge";
 import { useAppContext } from "@/context/AppContext";
+import { ResourceListType } from "@/utils/propsInterface";
 
 const TableContent: React.FC = () => {
   const { resources, deleteMutation } = useAppContext();
   return (
     <>
-      {resources?.map((resource: any) => (
-        <TableRow key={resource.id}>
+      {resources?.map((resource:ResourceListType) => (
+        <TableRow key={resource?.id}>
           <TableCell>{resource.fullname}</TableCell>
           <TableCell>{resource.category}</TableCell>
           <TableCell>{resource.subject}</TableCell>
@@ -23,7 +24,7 @@ const TableContent: React.FC = () => {
               {resource.status === "pending" ? "Pending" : "Processed"}
             </Badge>
           </TableCell>
-          <TableCell>{(resource.username && "user") || "guest"}</TableCell>
+          <TableCell>{(resource.fullname && "user") || "guest"}</TableCell>
           <TableCell>{resource.files.length}</TableCell>
           <TableCell className="text-right">
             <ActionOption

@@ -10,8 +10,9 @@ import {
 } from "./ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import UserTableOptions from "./UserTableOptions";
+import { UserListType } from "@/utils/propsInterface";
 
-const UserTable = ({ users }: { users: any }) => {
+const UserTable = ({ users }: { users: UserListType[] }) => {
   return (
     <div className="mt-6 rounded-md border">
       <Table>
@@ -32,7 +33,7 @@ const UserTable = ({ users }: { users: any }) => {
               </TableCell>
             </TableRow>
           ) : (
-            users.map((user: any) => (
+            users.map((user: UserListType) => (
               <TableRow key={user.id}>
                 <TableCell>
                   <div className="flex items-center gap-3">
@@ -43,7 +44,7 @@ const UserTable = ({ users }: { users: any }) => {
                       />
                       <AvatarFallback>
                         {user?.name?.split(" ")
-                          .map((n: any) => n[0])
+                          .map((n: string) => n[0])
                           .join("")}
                       </AvatarFallback>
                     </Avatar>
@@ -84,7 +85,7 @@ const UserTable = ({ users }: { users: any }) => {
                 </TableCell>
                 <TableCell>{user.submissions}</TableCell>
                 <TableCell className="text-right">
-                  <UserTableOptions/>
+                  <UserTableOptions user={user}/>
                 </TableCell>
               </TableRow>
             ))

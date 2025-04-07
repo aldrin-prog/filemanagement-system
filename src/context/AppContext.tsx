@@ -2,7 +2,8 @@
 import React, { createContext, useContext, useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { addResource, deleteResource, getResources, getUserResources } from "@/services/resourceService";
-import { getUserInfo, getUsers, signInUser, signOutUser } from "@/services/userService";
+import { disableUser, enableUser, getUserInfo, getUsers, signInUser, signOutUser } from "@/services/userService";
+import { ResourceType } from "@/utils/propsInterface";
 
 // Define constants for query keys
 const QUERY_KEYS = {
@@ -92,7 +93,7 @@ const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         refetchOnWindowFocus: true,
     });
     const addResourceMutation = useMutation({
-        mutationFn: ({form,files }:{form:unknown,files:Array<string>} ) =>
+        mutationFn: ({form,files }:{form:ResourceType,files:Array<string>} ) =>
             addResource(form, files),
         onSuccess: () => {
             invalidateQueries(); // Use reusable function
@@ -103,7 +104,7 @@ const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         },
     });
     const deleteMutation = useMutation({
-        mutationFn: ({ id, attachments }: { id: string; attachments: any }) =>
+        mutationFn: ({ id, attachments }: { id: string; attachments: string[] }) =>
             deleteResource(id, attachments),
         onSuccess: () => {
             invalidateQueries(); // Use reusable function
@@ -126,7 +127,7 @@ const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     });
 
     const userLoginMutation = useMutation({
-        mutationFn: ({ username, password }: { username: string; password: any }) => signInUser({username, password}),
+        mutationFn: ({ username, password }: { username: string; password: string }) => signInUser({username, password}),
         onSuccess: () => {
             invalidateQueries(); // Use reusable function
         },
@@ -135,10 +136,29 @@ const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             alert("An error occurred while logging in. Please try again."); // Provide user feedback
         },
     });
-
+    const userDisableMutation = useMutation({
+        mutationFn: ({ username }: { username: string }) => disableUser(username),
+        onSuccess: () => {
+            invalidateQueries(); // Use reusable function
+        },
+        onError: (error) => {
+            console.error("Error disabling user:", error); // Log error
+            alert("An error occurred while disabling the user. Please try again."); // Provide user feedback
+        },
+    });
+    const userEnableMutation = useMutation({
+        mutationFn: ({ username }: { username: string }) => enableUser(username),
+        onSuccess: () => {
+            invalidateQueries(); // Use reusable function
+        },
+        onError: (error) => {
+            console.error("Error enabling user:", error); // Log error
+            alert("An error occurred while enabling the user. Please try again."); // Provide user feedback
+        },
+    });
     const contextValue = useMemo(
-        () => ({ resources, deleteMutation, userResources, user, userList,userLogoutMutation,userLoginMutation,isUserSuccess,addResourceMutation }),
-        [resources, deleteMutation, userResources, user, userList,userLogoutMutation,userLoginMutation,isUserSuccess,addResourceMutation]
+        () => ({ userEnableMutation,userDisableMutation,resources, deleteMutation, userResources, user, userList,userLogoutMutation,userLoginMutation,isUserSuccess,addResourceMutation }),
+        [userEnableMutation,userDisableMutation,resources, deleteMutation, userResources, user, userList,userLogoutMutation,userLoginMutation,isUserSuccess,addResourceMutation]
     );
 
     return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;

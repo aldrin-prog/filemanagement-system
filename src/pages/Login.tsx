@@ -29,8 +29,8 @@ const Login = () => {
         password: user.password,
       });
       navigate("/dashboard", { replace: true });
-    } catch (error: any) {
-      alert(`Error Logging in: ${error.message}`);
+    } catch (error) {
+      alert(`Error Logging in: ${error}`);
     } finally {
       setIsLoading(false);
     }
