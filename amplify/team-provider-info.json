@@ -1,0 +1,40 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-filemanagementsystem-dev-e7b9d-authRole",
+      "UnauthRoleArn": "arn:aws:iam::162242266416:role/amplify-filemanagementsystem-dev-e7b9d-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::162242266416:role/amplify-filemanagementsystem-dev-e7b9d-authRole",
+      "Region": "ap-southeast-2",
+      "DeploymentBucketName": "amplify-filemanagementsystem-dev-e7b9d-deployment",
+      "UnauthRoleName": "amplify-filemanagementsystem-dev-e7b9d-unauthRole",
+      "StackName": "amplify-filemanagementsystem-dev-e7b9d",
+      "StackId": "arn:aws:cloudformation:ap-southeast-2:162242266416:stack/amplify-filemanagementsystem-dev-e7b9d/034f7350-0944-11f0-85df-02440a18738b",
+      "AmplifyAppId": "d25dllr75jjfir",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-filemanagementsystem-dev-e7b9d-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
+    },
+    "categories": {
+      "storage": {
+        "resourceDB": {},
+        "resourcefilestorage": {}
+      },
+      "function": {
+        "resourceapi": {
+          "deploymentBucketName": "amplify-filemanagementsystem-dev-e7b9d-deployment",
+          "s3Key": "amplify-builds/resourceapi-4d6a477967725a754b74-build.zip"
+        }
+      },
+      "auth": {
+        "filemanagementsystem29e09737": {}
+      },
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d25dllr75jjfir",
+          "type": "manual"
+        }
+      },
+      "api": {
+        "resourceapi": {}
+      }
+    }
+  }
+}

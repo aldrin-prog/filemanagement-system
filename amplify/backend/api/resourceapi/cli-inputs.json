@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "paths": {
+    "/api/resources": {
+      "name": "/api/resources",
+      "lambdaFunction": "resourceapi",
+      "permissions": {
+        "setting": "protected",
+        "auth": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "guest": [
+          "create"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "resourceName": "resourceDB",
+  "tableName": "ResourcesTable",
+  "partitionKey": {
+    "fieldName": "id",
+    "fieldType": "string"
+  },
+  "gsi": [],
+  "triggerFunctions": []
+}
