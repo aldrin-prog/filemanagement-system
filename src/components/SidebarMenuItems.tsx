@@ -8,7 +8,7 @@ const SidebarMenuItems = ({
     user,
   }: {
     pathname: string;
-    user: any;
+    user: { "cognito:groups"?: string[] } | null;
   }) => (
     <>
       <SidebarMenuItem>
@@ -19,7 +19,7 @@ const SidebarMenuItems = ({
           </Link>
         </SidebarMenuButton>
       </SidebarMenuItem>
-      {user?.["cognito:groups"].includes("Admin") && <SubmissionAdmin />}
+      {(user?.["cognito:groups"] ?? []).includes("Admin") && <SubmissionAdmin />}
       <SidebarMenuItem>
         <SidebarMenuButton asChild>
           <Link to="/my-submissions">
@@ -28,7 +28,7 @@ const SidebarMenuItems = ({
           </Link>
         </SidebarMenuButton>
       </SidebarMenuItem>
-      {user?.["cognito:groups"].includes("Admin") && (
+      {(user?.["cognito:groups"] ?? []).includes("Admin") && (
         <SidebarMenuItem>
           <SidebarMenuButton asChild>
             <Link to="/users">

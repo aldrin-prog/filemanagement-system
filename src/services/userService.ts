@@ -1,5 +1,5 @@
 import { signUp,signIn, type SignInInput,signOut,getCurrentUser, fetchAuthSession,fetchUserAttributes,updatePassword, type UpdatePasswordInput} from "aws-amplify/auth";
-import { CognitoIdentityProviderClient, AdminAddUserToGroupCommand,ListUsersCommand,AdminListGroupsForUserCommand } from "@aws-sdk/client-cognito-identity-provider";
+import { CognitoIdentityProviderClient,AdminEnableUserCommand,AdminDisableUserCommand, AdminAddUserToGroupCommand,ListUsersCommand,AdminListGroupsForUserCommand } from "@aws-sdk/client-cognito-identity-provider";
 import { getUserResourcesByUsername } from "./resourceService";
 
 const appAwsSecretAccessKey = import.meta.env.VITE_APP_AWS_SECRET_ACCESS_KEY;
@@ -66,7 +66,7 @@ const signInUser =({ username, password }: SignInInput)=>{
   return new Promise((resolve, reject) => {
     const processSignIn = async () => {
       try {
-        const { isSignedIn,nextStep}= await signIn({ username, password });
+        const { isSignedIn}= await signIn({ username, password });
         if (isSignedIn)
           resolve(isSignedIn)
       } catch (error) {
@@ -122,8 +122,7 @@ const getUserInfo = async () => {
     if (!user) {
       return null;
     }
-
-    return {...user,userAttributes:currentUserAttributes}; ;
+    return {...user,userAttributes:currentUserAttributes} ;
   } catch (error) {
     console.error("Error fetching user info", error);
     return null;
@@ -184,4 +183,26 @@ const updateUserPassword=async ({
     console.log(err);
   }
 }
-export { registerUSer,signInUser,signOutUser,getAuthenticatedUser,getUserGroups,getUserInfo,addUserToGroup,getUsers,updateUserPassword };
+const disableUser = async (username: string) => {
+  try {
+    const command = new AdminDisableUserCommand({
+      UserPoolId: USER_POOL_ID,
+      Username: username,
+    });
+    await client.send(command);
+  }catch (error) {
+    console.error("Error disabling user:", error);
+  }
+}
+const enableUser = async (username: string) => {
+  try {
+    const command = new AdminEnableUserCommand({
+      UserPoolId: USER_POOL_ID,
+      Username: username,
+    });
+    await client.send(command);
+  } catch (error) {
+    console.error("Error enabling user:", error);
+  }
+}
+export { enableUser,disableUser,registerUSer,signInUser,signOutUser,getAuthenticatedUser,getUserGroups,getUserInfo,addUserToGroup,getUsers,updateUserPassword };

@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
 import { updateUserPassword } from "@/services/userService";
 
 const PasswordValidationItem = ({
@@ -31,7 +30,6 @@ const CreatePasswordForm = ({ email }: { email: string }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
   const { toast } = useToast();
 
   const passwordCriteria = {
@@ -54,14 +52,8 @@ const CreatePasswordForm = ({ email }: { email: string }) => {
 
     try {
       // Simulate API call
-      const res=await updateUserPassword({oldPassword:oldPassword, newPassword: password})
-      console.log("res", res)
-      // toast({
-      //   title: "Password created",
-      //   description: "Your password has been successfully created.",
-      // });
-
-      // navigate("/login");
+      await updateUserPassword({oldPassword:oldPassword, newPassword: password})
+      
     } catch (error) {
       toast({
         title: "Error",

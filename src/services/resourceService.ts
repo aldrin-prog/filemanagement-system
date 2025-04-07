@@ -1,18 +1,10 @@
+import { ResourceListType, ResourceType } from "@/utils/propsInterface";
 import { get, post, del } from "aws-amplify/api";
 import { fetchAuthSession } from "aws-amplify/auth";
 import { remove, downloadData } from "aws-amplify/storage";
 
-type DocumentType = {
-  id: string;
-  fullname: string;
-  category: string;
-  subject: string;
-  createdAt: string;
-  status: string;
-  files: any[];
-};
 
-const getResources = async (): Promise<DocumentType> => {
+const getResources = async (): Promise<ResourceListType> => {
   try {
     const restOperation = get({
       apiName: "resourceapi",
@@ -20,16 +12,15 @@ const getResources = async (): Promise<DocumentType> => {
     });
     const result = await restOperation.response;
     const response = await result.body.json();
-    return response as DocumentType;
+    return response as ResourceListType;
   } catch (error) {
     console.error("Error", error);
-    return error as DocumentType;
+    return error as ResourceListType;
   }
 };
 
-const addResource = async (resource: any, files: Array<string>) => {
+const addResource = async (resource: ResourceType, files: Array<string>) => {
   try {
-    console.log("Adding resource", resource, files);
     const userInfo = await fetchAuthSession()
       ?.then((user) => user.tokens)
       .catch(() => null);
@@ -53,11 +44,11 @@ const addResource = async (resource: any, files: Array<string>) => {
   }
 };
 
-const deleteResource = async (id: string, attachments: any) => {
+const deleteResource = async (id: string, attachments: string[]) => {
   try {
     if (attachments && attachments.length > 0) {
       await Promise.all(
-        attachments.map(async (attachment: any) => {
+        attachments.map(async (attachment: string) => {
           await remove({ path: attachment });
         })
       );
@@ -122,7 +113,7 @@ const downloadResource = async (path: string) => {
   try {
     // Download a file from s3 bucket
     const { body} = await downloadData({
-      path: path,
+      path: path
       
     }).result;
     const blob = await body.blob();

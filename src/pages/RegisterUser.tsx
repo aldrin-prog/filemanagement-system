@@ -85,9 +85,15 @@ const RegisterUser = () => {
         name: data.name,
         password: data.password,
       });
-      alert("Account Created Successfully. Please confirm your email to login.");
-    } catch (error: any) {
-      alert(`Error Creating Account: ${error.message}`);
+      alert(
+        "Account Created Successfully. Please confirm your email to login."
+      );
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        alert(`Error Creating Account: ${error.message}`);
+      } else {
+        alert("An unknown error occurred.");
+      }
     } finally {
       setIsLoading(false);
     }

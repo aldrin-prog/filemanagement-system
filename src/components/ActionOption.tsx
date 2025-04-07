@@ -19,7 +19,7 @@ const ActionOption = ({ deleteMutation, id, attachments }: ActionOptionProps) =>
       alert("An error occurred while deleting the resource. Please try again."); // Provide user feedback
     }
   };
-  const handleDownloadFiles = async (files:Array<string>) => {
+  const handleDownloadFiles = async (files:string[]) => {
     if(!files || files.length === 0) return; // Early return if no files to download
     const confirmationMessage = "Are you sure you want to download these files?"; // Extracted message
     if (!confirm(confirmationMessage)) return; // Early return for better readability

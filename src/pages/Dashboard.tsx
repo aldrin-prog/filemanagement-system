@@ -20,7 +20,14 @@ import { FileText, Users, Upload, CheckCircle } from "lucide-react";
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
 
 // Reusable StatsCard Component
-const StatsCard = ({ title, icon: Icon, value, description }) => (
+interface StatsCardProps {
+  title: string;
+  icon: React.ComponentType<{ className?: string }>;
+  value: string | number;
+  description: string;
+}
+
+const StatsCard = ({ title, icon: Icon, value, description }: StatsCardProps) => (
   <Card>
     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
       <CardTitle className="text-sm font-medium">{title}</CardTitle>
@@ -34,7 +41,13 @@ const StatsCard = ({ title, icon: Icon, value, description }) => (
 );
 
 // Reusable ChartCard Component
-const ChartCard = ({ title, description, children }) => (
+interface ChartCardProps {
+  title: string;
+  description: string;
+  children: React.ReactNode;
+}
+
+const ChartCard = ({ title, description, children }: ChartCardProps) => (
   <Card>
     <CardHeader>
       <CardTitle>{title}</CardTitle>
@@ -45,7 +58,14 @@ const ChartCard = ({ title, description, children }) => (
 );
 
 // Reusable ActivityItem Component
-const ActivityItem = ({ icon: Icon, title, description, time }) => (
+interface ActivityItemProps {
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  description: string;
+  time: string;
+}
+
+const ActivityItem = ({ icon: Icon, title, description, time }: ActivityItemProps) => (
   <div className="flex items-center gap-4 rounded-lg border p-3">
     <div className="rounded-full bg-primary/10 p-2">
       <Icon className="h-4 w-4 text-primary" />
@@ -195,8 +215,8 @@ const Dashboard = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {activities.map((activity, index) => (
-              <ActivityItem key={index} {...activity} />
+            {activities.map((activity) => (
+              <ActivityItem key={activity.title} {...activity} />
             ))}
           </div>
         </CardContent>

@@ -3,12 +3,13 @@ import ActionOption from "./ActionOption";
 import { format } from "date-fns";
 import { Badge } from "./ui/badge";
 import { useAppContext } from "@/context/AppContext";
+import { ResourceListType } from "@/utils/propsInterface";
 
 const UserTableContent: React.FC = () => {
   const {userResources,deleteMutation}=useAppContext()
   return (
     <>
-      {userResources?.map((resource: any) => (
+      {userResources?.map((resource: ResourceListType) => (
         <TableRow key={resource.id}>
           <TableCell>{resource.fullname}</TableCell>
           <TableCell>{resource.category}</TableCell>
