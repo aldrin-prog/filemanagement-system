@@ -3,7 +3,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   addResource,
   deleteResource,
+  getProcessedForms,
   getResources,
+  getResourceUploadedFiles,
   getUserResources,
   updateResourceStatus,
 } from "@/services/resourceService";
@@ -24,6 +26,8 @@ const QUERY_KEYS = {
   USER_LIST: "userList",
   USER_RESOURCE: "userResource",
   USER: "user",
+  UPLOADED_FILES: "uploadedFiles",
+  PROCESSED_FORMS: "processedForms",
 };
 
 const AppContext = createContext<any>(null);
@@ -80,7 +84,11 @@ const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER] });
     queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER_LIST] });
   };
-
+  const { data: uploadedFiles } = useQuery({
+    queryKey: [QUERY_KEYS.UPLOADED_FILES],
+    queryFn: getResourceUploadedFiles,
+    refetchOnWindowFocus: true,
+  });
   const { data: resources } = useQuery({
     queryKey: [QUERY_KEYS.RESOURCE],
     queryFn: getResources,
@@ -102,6 +110,11 @@ const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { data: user, isSuccess: isUserSuccess } = useQuery({
     queryKey: [QUERY_KEYS.USER],
     queryFn: getUserInfo,
+    refetchOnWindowFocus: true,
+  });
+  const { data: processedForms } = useQuery({
+    queryKey: [QUERY_KEYS.RESOURCE],
+    queryFn: getProcessedForms,
     refetchOnWindowFocus: true,
   });
   const updateResourceStatusMutation = useMutation({
@@ -212,7 +225,6 @@ const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       ); // Provide user feedback
     },
   });
-
   const contextValue = useMemo(
     () => ({
       updateResourceStatusMutation,
@@ -228,6 +240,8 @@ const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       userLoginMutation,
       isUserSuccess,
       addResourceMutation,
+      uploadedFiles,
+      processedForms
     }),
     [
       updateResourceStatusMutation,
@@ -243,6 +257,8 @@ const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       userLoginMutation,
       isUserSuccess,
       addResourceMutation,
+      uploadedFiles,
+      processedForms
     ]
   );
 

@@ -98,10 +98,30 @@ const getUSerResources = async (req, res) => {
         res.status(500).json({ message:"Server Error",error:error });
     }
 }
+const getProcessedForms = async (req, res) => {
+    try {
+        const command = new ScanCommand({
+            TableName: TABLENAME,
+            FilterExpression: "#status = :status",
+            ExpressionAttributeNames: {
+                "#status": "status"
+            },
+            ExpressionAttributeValues: {
+                ":status": "processed"
+            }
+        });
+
+        const data = await docClient.send(command);
+        res.status(200).json(data.Items);
+    } catch (error) {
+        res.status(500).json({ message: "Server Error", error: error.message });
+    }
+};
 module.exports = {
     getResources,
     addRousource,
     updateResource,
     deleteResource,
-    getUSerResources
+    getUSerResources,
+    getProcessedForms
 };

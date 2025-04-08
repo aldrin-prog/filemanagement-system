@@ -10,7 +10,6 @@ import {
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { ResourceListType } from "@/utils/propsInterface";
-import { updateResourceStatus } from "@/services/resourceService";
 import { useAppContext } from "@/context/AppContext";
 
 const UpdateSubmissionStatus = ({
