@@ -1,6 +1,6 @@
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from "./ui/dropdown-menu";
-import { Download, MoreHorizontal, Trash2 } from "lucide-react";
+import { ArrowUp, Download, Eye, MoreHorizontal, Trash2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { ActionOptionProps } from "@/utils/propsInterface";
 import { downloadResource } from "@/services/resourceService";
@@ -42,6 +42,10 @@ const ActionOption = ({ deleteMutation, id, attachments }: ActionOptionProps) =>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuItem>
+          <ArrowUp className="mr-2 h-4 w-4"/>
+          <span>Update Details</span>
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={() => handleDownloadFiles(attachments)}>
           <Download className="mr-2 h-4 w-4" />
           <span>Download Files</span>

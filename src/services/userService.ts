@@ -1,9 +1,27 @@
-import { signUp,signIn, type SignInInput,signOut,getCurrentUser, fetchAuthSession,fetchUserAttributes,updatePassword, type UpdatePasswordInput} from "aws-amplify/auth";
-import { CognitoIdentityProviderClient,AdminEnableUserCommand,AdminDisableUserCommand, AdminAddUserToGroupCommand,ListUsersCommand,AdminListGroupsForUserCommand } from "@aws-sdk/client-cognito-identity-provider";
+import {
+  signUp,
+  signIn,
+  type SignInInput,
+  signOut,
+  getCurrentUser,
+  fetchAuthSession,
+  fetchUserAttributes,
+  updatePassword,
+  type UpdatePasswordInput,
+} from "aws-amplify/auth";
+import {
+  AdminRemoveUserFromGroupCommand,
+  CognitoIdentityProviderClient,
+  AdminEnableUserCommand,
+  AdminDisableUserCommand,
+  AdminAddUserToGroupCommand,
+  ListUsersCommand,
+  AdminListGroupsForUserCommand,
+} from "@aws-sdk/client-cognito-identity-provider";
 import { getUserResourcesByUsername } from "./resourceService";
 
 const appAwsSecretAccessKey = import.meta.env.VITE_APP_AWS_SECRET_ACCESS_KEY;
-const appAwsAccessKeyId     = import.meta.env.VITE_APP_AWS_ACCESS_KEY_ID
+const appAwsAccessKeyId = import.meta.env.VITE_APP_AWS_ACCESS_KEY_ID;
 type SignUpParameters = {
   name: string;
   password: string;
@@ -12,25 +30,29 @@ type SignUpParameters = {
 const USER_POOL_ID = "ap-southeast-2_b9wpomezT";
 const client = new CognitoIdentityProviderClient({
   region: "ap-southeast-2",
-  credentials:{
+  credentials: {
     accessKeyId: appAwsAccessKeyId,
     secretAccessKey: appAwsSecretAccessKey,
-  }
-})
+  },
+});
 interface AddUserToGroupParams {
   username: string;
   userPoolId: string;
   groupName: string;
 }
 
-const addUserToGroup = async ({ username, userPoolId, groupName }: AddUserToGroupParams): Promise<void> => {
+const addUserToGroup = async ({
+  username,
+  userPoolId,
+  groupName,
+}: AddUserToGroupParams): Promise<void> => {
   try {
     const command = new AdminAddUserToGroupCommand({
       GroupName: groupName,
       UserPoolId: userPoolId,
       Username: username,
     });
-    await client.send(command)
+    await client.send(command);
   } catch (error) {
     console.error("Error adding user to group:", error);
   }
@@ -39,7 +61,7 @@ const registerUSer = ({ name, password, email }: SignUpParameters) => {
   return new Promise((resolve, reject) => {
     const signUpUser = async () => {
       try {
-        const {  userId } = await signUp({
+        const { userId } = await signUp({
           username: email,
           password,
           options: {
@@ -48,35 +70,35 @@ const registerUSer = ({ name, password, email }: SignUpParameters) => {
               name,
             },
           },
-        })
+        });
         await addUserToGroup({
           username: email,
           userPoolId: USER_POOL_ID,
-          groupName: "USER"});
-        resolve(userId)
+          groupName: "USER",
+        });
+        resolve(userId);
       } catch (error) {
         console.log("error signing up:", error);
-        reject(error instanceof Error ? error : new Error(String(error)))
+        reject(error instanceof Error ? error : new Error(String(error)));
       }
     };
-    signUpUser()
+    signUpUser();
   });
 };
-const signInUser =({ username, password }: SignInInput)=>{
+const signInUser = ({ username, password }: SignInInput) => {
   return new Promise((resolve, reject) => {
     const processSignIn = async () => {
       try {
-        const { isSignedIn}= await signIn({ username, password });
-        if (isSignedIn)
-          resolve(isSignedIn)
+        const { isSignedIn } = await signIn({ username, password });
+        if (isSignedIn) resolve(isSignedIn);
       } catch (error) {
-        console.log("error signing in:", error);  
-        reject(error instanceof Error ? error : new Error(String(error)))
+        console.log("error signing in:", error);
+        reject(error instanceof Error ? error : new Error(String(error)));
       }
-    }
-    processSignIn()
-  })
-}
+    };
+    processSignIn();
+  });
+};
 const signOutUser = async () => {
   return new Promise((resolve, reject) => {
     const processSignOut = async () => {
@@ -90,9 +112,9 @@ const signOutUser = async () => {
     };
     processSignOut();
   });
-}
+};
 
-const getAuthenticatedUser= async()=> {
+const getAuthenticatedUser = async () => {
   return new Promise((resolve, reject) => {
     const processCurrentUser = async () => {
       try {
@@ -101,33 +123,25 @@ const getAuthenticatedUser= async()=> {
       } catch (err) {
         reject(new Error("Error fetching current user"));
       }
-    }
+    };
     processCurrentUser();
-  })
-}
-const getUserGroups = async () => {
-  try {
-    const userGroups = (await fetchAuthSession()).tokens?.accessToken?.payload["cognito:groups"];
-    return userGroups;
-  } catch (error) {
-    console.error("Error fetching user groups", error);
-    return null;
-  }
-}
+  });
+};
+
 const getUserInfo = async () => {
   try {
     const userInfo = await fetchAuthSession();
-    const currentUserAttributes = await fetchUserAttributes(); 
-    const user=userInfo?.tokens?.accessToken?.payload ?? null;
+    const currentUserAttributes = await fetchUserAttributes();
+    const user = userInfo?.tokens?.accessToken?.payload ?? null;
     if (!user) {
       return null;
     }
-    return {...user,userAttributes:currentUserAttributes} ;
+    return { ...user, userAttributes: currentUserAttributes };
   } catch (error) {
     console.error("Error fetching user info", error);
     return null;
   }
-}
+};
 const getUsers = async () => {
   try {
     const command = new ListUsersCommand({ UserPoolId: USER_POOL_ID });
@@ -138,14 +152,15 @@ const getUsers = async () => {
 
     const formattedUsers = await Promise.all(
       response.Users.map(async (user) => {
-        const {Username:username,Enabled:status} = user;
+        const { Username: username, Enabled: status } = user;
         const listGroupsCommand = new AdminListGroupsForUserCommand({
           UserPoolId: USER_POOL_ID,
           Username: username,
         });
         const groupsResponse = await client.send(listGroupsCommand);
-        const groupNames = groupsResponse.Groups?.map((group) => group.GroupName) || [];
-        
+        const groupNames =
+          groupsResponse.Groups?.map((group) => group.GroupName) || [];
+
         const attributes = user?.Attributes?.reduce((acc, attr) => {
           if (attr.Name === "email" || attr.Name === "name") {
             acc[attr.Name] = attr.Value ?? "";
@@ -153,17 +168,18 @@ const getUsers = async () => {
           return acc;
         }, {} as Record<string, string>);
 
-        const submissions  = username ? await getUserResourcesByUsername(username) : [];
-        return { 
-          id: username, 
-          ...attributes, 
+        const submissions = username
+          ? await getUserResourcesByUsername(username)
+          : [];
+        return {
+          id: username,
+          ...attributes,
           confirmationStatus: user.UserStatus?.toLocaleLowerCase(),
-          submissions: Array.isArray(submissions) ? submissions.length : 0, 
-          role:  groupNames[0]?.toLocaleLowerCase(), 
-          status:status? "active":"inactive",
+          submissions: Array.isArray(submissions) ? submissions.length : 0,
+          role: groupNames[0]?.toLocaleLowerCase(),
+          status: status ? "active" : "inactive",
           // lastLogin: "2025-03-24"
         };
-        
       })
     );
     return formattedUsers;
@@ -172,17 +188,18 @@ const getUsers = async () => {
     return [];
   }
 };
-const updateUserPassword=async ({
+const updateUserPassword = async ({
   oldPassword,
-  newPassword
-}: UpdatePasswordInput)=>{
+  newPassword,
+}: UpdatePasswordInput) => {
   try {
     const res = await updatePassword({ oldPassword, newPassword });
     console.log("Password updated successfully:", res);
   } catch (err) {
     console.log(err);
   }
-}
+};
+
 const disableUser = async (username: string) => {
   try {
     const command = new AdminDisableUserCommand({
@@ -190,10 +207,10 @@ const disableUser = async (username: string) => {
       Username: username,
     });
     await client.send(command);
-  }catch (error) {
+  } catch (error) {
     console.error("Error disabling user:", error);
   }
-}
+};
 const enableUser = async (username: string) => {
   try {
     const command = new AdminEnableUserCommand({
@@ -204,5 +221,35 @@ const enableUser = async (username: string) => {
   } catch (error) {
     console.error("Error enabling user:", error);
   }
-}
-export { enableUser,disableUser,registerUSer,signInUser,signOutUser,getAuthenticatedUser,getUserGroups,getUserInfo,addUserToGroup,getUsers,updateUserPassword };
+};
+const changeUserRole = async (username: string, newRole: string,oldRole:string) => {
+  try {
+    const command = new AdminRemoveUserFromGroupCommand({
+      UserPoolId: USER_POOL_ID,
+      Username: username,
+      GroupName: oldRole,
+    });
+    await client.send(command);
+    const addCommand = new AdminAddUserToGroupCommand({
+      UserPoolId: USER_POOL_ID,
+      Username: username,
+      GroupName: newRole,
+    });
+    await client.send(addCommand);
+  } catch (error) {
+    console.error("Error changing user role:", error);
+  }
+};
+export {
+  changeUserRole,
+  enableUser,
+  disableUser,
+  registerUSer,
+  signInUser,
+  signOutUser,
+  getAuthenticatedUser,
+  getUserInfo,
+  addUserToGroup,
+  getUsers,
+  updateUserPassword,
+};

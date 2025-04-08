@@ -6,7 +6,7 @@ const UnauthorizedPage: React.FC = () => {
     const navigate = useNavigate();
 
     const handleGoBack = () => {
-        navigate(-1); // Navigate to the previous page
+        navigate("/dashboard")
     };
 
     return (
@@ -16,7 +16,7 @@ const UnauthorizedPage: React.FC = () => {
                 You do not have permission to view this page. Please contact your administrator if you believe this is a mistake.
             </p>
             <Button onClick={handleGoBack} className="px-4 py-2 text-white bg-blue-600 hover:bg-blue-700">
-                Go Back
+                Go Back to Dashboard
             </Button>
         </div>
     );

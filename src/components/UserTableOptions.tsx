@@ -10,11 +10,14 @@ import {
   } from "./ui/dropdown-menu";
 import { UserListType } from "@/utils/propsInterface";
 import { useAppContext } from "@/context/AppContext";
+import ChangeUserRole from "./ChangeUserRole";
+import { useState } from "react";
 const UserTableOptions = ({user}:{user:UserListType}) => {
   const {userDisableMutation,userEnableMutation}= useAppContext();
-  
+  const [showDialog, setShowDialog] = useState(false);
   return (
-    <DropdownMenu>
+    <>
+      <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon">
           <MoreHorizontal className="h-4 w-4" />
@@ -23,7 +26,7 @@ const UserTableOptions = ({user}:{user:UserListType}) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setShowDialog(true)}>
           <Shield className="mr-2 h-4 w-4" />
           <span>Change Role</span>
         </DropdownMenuItem>
@@ -44,6 +47,8 @@ const UserTableOptions = ({user}:{user:UserListType}) => {
         }
       </DropdownMenuContent>
     </DropdownMenu>
+    <ChangeUserRole user={user} showDialog={ showDialog} setShowDialog={setShowDialog}/>
+    </>
   );
 };
 export default UserTableOptions
