@@ -1,20 +1,15 @@
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { DropdownMenuItem } from "./ui/dropdown-menu";
-import { Shield } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { UserListType } from "@/utils/propsInterface";
-import { changeUserRole } from "@/services/userService";
 import { useAppContext } from "@/context/AppContext";
 
 const ChangeUserRole = ({

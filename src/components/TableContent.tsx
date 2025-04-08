@@ -7,6 +7,7 @@ import { ResourceListType } from "@/utils/propsInterface";
 
 const TableContent: React.FC = () => {
   const { resources, deleteMutation } = useAppContext();
+  
   return (
     <>
       {resources?.map((resource:ResourceListType) => (
@@ -28,9 +29,8 @@ const TableContent: React.FC = () => {
           <TableCell>{resource.files.length}</TableCell>
           <TableCell className="text-right">
             <ActionOption
-              id={resource.id}
+            resource={resource}
               deleteMutation={deleteMutation}
-              attachments={resource.files}
             />
           </TableCell>
         </TableRow>

@@ -2,8 +2,7 @@
 import { UseMutationResult } from "@tanstack/react-query";
 
 interface ActionOptionProps {
-    id: string;
-    attachments: string[];
+    resource: ResourceListType
     deleteMutation: UseMutationResult;
 }
 interface FileSelectorProps {

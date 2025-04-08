@@ -5,6 +5,7 @@ import {
   deleteResource,
   getResources,
   getUserResources,
+  updateResourceStatus,
 } from "@/services/resourceService";
 import {
   changeUserRole,
@@ -103,6 +104,19 @@ const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     queryFn: getUserInfo,
     refetchOnWindowFocus: true,
   });
+  const updateResourceStatusMutation = useMutation({
+    mutationFn: ({ id, status }: { id: string; status: string }) =>
+      updateResourceStatus(id, status),
+    onSuccess: () => {
+      invalidateQueries(); // Use reusable function
+    },
+    onError: (error) => {
+      console.error("Error updating resource status:", error); // Log error
+      alert(
+        "An error occurred while updating the resource status. Please try again."
+      ); // Provide user feedback
+    },
+  });
   const addResourceMutation = useMutation({
     mutationFn: ({
       form,
@@ -198,8 +212,10 @@ const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       ); // Provide user feedback
     },
   });
+
   const contextValue = useMemo(
     () => ({
+      updateResourceStatusMutation,
       userChangeRoleMutation,
       userEnableMutation,
       userDisableMutation,
@@ -214,6 +230,7 @@ const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       addResourceMutation,
     }),
     [
+      updateResourceStatusMutation,
       userChangeRoleMutation,
       userEnableMutation,
       userDisableMutation,
