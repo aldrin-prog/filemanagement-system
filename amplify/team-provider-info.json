@@ -20,7 +20,7 @@
       "function": {
         "resourceapi": {
           "deploymentBucketName": "amplify-filemanagementsystem-dev-e7b9d-deployment",
-          "s3Key": "amplify-builds/resourceapi-354f686e705050363837-build.zip"
+          "s3Key": "amplify-builds/resourceapi-4d544253463067685235-build.zip"
         }
       },
       "auth": {

@@ -1,7 +1,7 @@
 import { ResourceListType, ResourceType } from "@/utils/propsInterface";
 import { get, post, del, put } from "aws-amplify/api";
 import { fetchAuthSession } from "aws-amplify/auth";
-import { remove, downloadData } from "aws-amplify/storage";
+import { remove, downloadData,list } from "aws-amplify/storage";
 
 
 const getResources = async (): Promise<ResourceListType> => {
@@ -152,6 +152,29 @@ const updateResourceStatus = async (id: string, status:string) => {
       console.error("Error", error);
   }
 }
+const getResourceUploadedFiles = async()=>{
+  try {
+    const result = await list({ path: "protected/" });
+    const files = result?.items;
+    return files
+  } catch (error) {
+    console.error("Error", error);
+  }
+
+}
+const getProcessedForms=async () => {
+  try {
+    const restOperation = get({
+      apiName: "resourceapi",
+      path: "/api/resources/processed-forms",
+    });
+    const result = await restOperation.response;
+    return result.body.json();
+  }catch (error) {
+    console.error("Error", error);
+
+  }
+}
 export {
   updateResourceStatus,
   getUserResources,
@@ -160,4 +183,6 @@ export {
   deleteResource,
   getUserResourcesByUsername,
   downloadResource,
+  getResourceUploadedFiles,
+  getProcessedForms
 };

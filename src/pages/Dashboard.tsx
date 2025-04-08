@@ -1,5 +1,3 @@
-"use client"
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -16,6 +14,7 @@ import {
   Legend,
 } from "recharts";
 import { FileText, Users, Upload, CheckCircle } from "lucide-react";
+import { useAppContext } from "@/context/AppContext";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
 
@@ -79,6 +78,8 @@ const ActivityItem = ({ icon: Icon, title, description, time }: ActivityItemProp
 );
 
 const Dashboard = () => {
+  const {userList,resources,uploadedFiles,processedForms } = useAppContext(); // Assuming you have a context to get user data
+
   const submissionData = [
     { name: "Jan", count: 12 },
     { name: "Feb", count: 19 },
@@ -123,7 +124,7 @@ const Dashboard = () => {
       time: "3 hours ago",
     },
   ];
-
+ 
   return (
     <div className="space-y-6">
       <div>
@@ -135,26 +136,26 @@ const Dashboard = () => {
         <StatsCard
           title="Total Submissions"
           icon={FileText}
-          value="167"
-          description="+12% from last month"
+          value={resources?.length || 0}
+          description=""
         />
         <StatsCard
           title="Registered Users"
           icon={Users}
-          value="42"
-          description="+5% from last month"
+          value={userList?.length || 0}
+          description=""
         />
         <StatsCard
           title="Files Uploaded"
           icon={Upload}
-          value="289"
-          description="+18% from last month"
+          value={uploadedFiles?.length || 0}
+          description=""
         />
         <StatsCard
           title="Processed Forms"
           icon={CheckCircle}
-          value="152"
-          description="91% completion rate"
+          value={processedForms?.length || 0}
+          description=""
         />
       </div>
 
