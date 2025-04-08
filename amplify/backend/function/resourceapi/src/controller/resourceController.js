@@ -1,4 +1,4 @@
-const { PutCommand,ScanCommand,DeleteCommand,UpdateCommand } = require("@aws-sdk/lib-dynamodb");
+const { PutCommand,ScanCommand,DeleteCommand,UpdateCommand,QueryCommand } = require("@aws-sdk/lib-dynamodb");
 const { v4: uuidv4 } = require("uuid");
 const { docClient } = require("../utils/db");
 const TABLENAME = "ResourcesTable-dev";
@@ -22,7 +22,7 @@ const addRousource= async (req, res) => {
             Item: {
                 id: uuidv4(),
                 ...req.body,
-                status:"pending",
+                statusForm:"pending",
                 createdAt: currentDate,
                 updatedAt: currentDate
             },
@@ -42,13 +42,13 @@ const updateResource = async (req, res) => {
 
         const command = new UpdateCommand({
             TableName: TABLENAME,
-            Key: { id: id }, // no need to wrap in {S: id} with docClient
-            UpdateExpression: "SET #status = :status, updatedAt = :updatedAt",
-            ExpressionAttributeNames: {
-                "#status": "status"
+            Key: { id: id },
+            UpdateExpression: "SET #statusForm = :status, updatedAt = :updatedAt",
+            ExpressionAttributeNames:{
+                "#statusForm": "statusForm"
             },
             ExpressionAttributeValues: {
-                ":status": req.body.status,
+                ":status": req.body.statusForm,
                 ":updatedAt": currentDate
             }
         });
@@ -100,23 +100,21 @@ const getUSerResources = async (req, res) => {
 }
 const getProcessedForms = async (req, res) => {
     try {
-        const command = new ScanCommand({
+        const command= new ScanCommand({
             TableName: TABLENAME,
-            FilterExpression: "#status = :status",
-            ExpressionAttributeNames: {
-                "#status": "status"
-            },
+            FilterExpression: "statusForm = :status",
             ExpressionAttributeValues: {
-                ":status": "processed"
+                ":status": "processed",
             }
         });
-
         const data = await docClient.send(command);
         res.status(200).json(data.Items);
     } catch (error) {
-        res.status(500).json({ message: "Server Error", error: error.message });
+        res.status(500).json({ message:"Server Error",error:error });
     }
 };
+
+
 module.exports = {
     getResources,
     addRousource,

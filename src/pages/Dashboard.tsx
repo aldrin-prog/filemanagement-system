@@ -15,6 +15,7 @@ import {
 } from "recharts";
 import { FileText, Users, Upload, CheckCircle } from "lucide-react";
 import { useAppContext } from "@/context/AppContext";
+import { use, useEffect } from "react";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
 
@@ -124,7 +125,6 @@ const Dashboard = () => {
       time: "3 hours ago",
     },
   ];
- 
   return (
     <div className="space-y-6">
       <div>

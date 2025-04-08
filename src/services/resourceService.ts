@@ -141,7 +141,7 @@ const updateResourceStatus = async (id: string, status:string) => {
       path: `/api/resources/${id}`,
       options: {
         body: {
-          status: status,
+          statusForm: status,
         },
       }
     })
