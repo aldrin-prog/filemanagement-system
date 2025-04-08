@@ -23,7 +23,7 @@ const UserTableContent: React.FC = () => {
           <TableCell>{resource.username && "user" || "guest"}</TableCell>
           <TableCell>{resource.files.length}</TableCell>
           <TableCell className="text-right">
-            <ActionOption id={resource.id} deleteMutation={deleteMutation} attachments={resource.files} />
+            <ActionOption deleteMutation={deleteMutation} resource={resource} />
 
           </TableCell>
         </TableRow>

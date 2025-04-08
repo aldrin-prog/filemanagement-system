@@ -1,5 +1,5 @@
 import { ResourceListType, ResourceType } from "@/utils/propsInterface";
-import { get, post, del } from "aws-amplify/api";
+import { get, post, del, put } from "aws-amplify/api";
 import { fetchAuthSession } from "aws-amplify/auth";
 import { remove, downloadData } from "aws-amplify/storage";
 
@@ -134,8 +134,26 @@ const downloadResource = async (path: string) => {
     console.error("Error downloading resource", error);
   }
 };
-
+const updateResourceStatus = async (id: string, status:string) => {
+  try {
+    const restOperation = put({
+      apiName: "resourceapi",
+      path: `/api/resources/${id}`,
+      options: {
+        body: {
+          status: status,
+        },
+      }
+    })
+    const result = await restOperation.response;
+    const response = await result.body.json();
+    return response;
+  } catch (error) {
+      console.error("Error", error);
+  }
+}
 export {
+  updateResourceStatus,
   getUserResources,
   getResources,
   addResource,

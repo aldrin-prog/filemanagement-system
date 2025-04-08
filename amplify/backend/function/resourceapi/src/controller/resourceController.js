@@ -1,4 +1,4 @@
-const { PutCommand,ScanCommand,DeleteCommand } = require("@aws-sdk/lib-dynamodb");
+const { PutCommand,ScanCommand,DeleteCommand,UpdateCommand } = require("@aws-sdk/lib-dynamodb");
 const { v4: uuidv4 } = require("uuid");
 const { docClient } = require("../utils/db");
 const TABLENAME = "ResourcesTable-dev";
@@ -36,8 +36,37 @@ const addRousource= async (req, res) => {
 }
 
 const updateResource = async (req, res) => {
-    res.status(200).json({ success: 'put call succeed!', url: req.url, body: req.body });
-}
+    try {
+        const { id } = req.params;
+        const currentDate = new Date().toISOString();
+
+        const command = new UpdateCommand({
+            TableName: TABLENAME,
+            Key: { id: id }, // no need to wrap in {S: id} with docClient
+            UpdateExpression: "SET #status = :status, updatedAt = :updatedAt",
+            ExpressionAttributeNames: {
+                "#status": "status"
+            },
+            ExpressionAttributeValues: {
+                ":status": req.body.status,
+                ":updatedAt": currentDate
+            }
+        });
+
+        await docClient.send(command);
+
+        res.status(200).json({
+            success: "Resource updated successfully",
+            updatedId: id
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Server Error",
+            error: error.message
+        });
+    }
+};
 const deleteResource = async (req, res) => {
    try {
     const {id}=req.params;
