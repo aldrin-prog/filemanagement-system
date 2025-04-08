@@ -20,9 +20,9 @@ const TableContent: React.FC = () => {
           </TableCell>
           <TableCell>
             <Badge
-              variant={resource.status === "pending" ? "outline" : "default"}
+              variant={resource.statusForm === "pending" ? "outline" : "default"}
             >
-              {resource.status === "pending" ? "Pending" : "Processed"}
+              {resource.statusForm === "pending" ? "Pending" : "Processed"}
             </Badge>
           </TableCell>
           <TableCell>{(resource.fullname && "user") || "guest"}</TableCell>

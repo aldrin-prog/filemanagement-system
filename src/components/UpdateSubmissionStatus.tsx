@@ -21,7 +21,7 @@ const UpdateSubmissionStatus = ({
     showDialog: boolean;
     setShowDialog: (open: boolean) => void;
 }) => {
-    const [status, setStatus] = useState(resource.status); // assume `resource.status` exists
+    const [status, setStatus] = useState(resource.statusForm); // assume `resource.status` exists
     const [loading, setLoading] = useState(false);
     const {updateResourceStatusMutation} = useAppContext(); // assume this is defined in your context
     const handleSubmit = async (e: React.FormEvent) => {
@@ -54,7 +54,7 @@ const UpdateSubmissionStatus = ({
                         </label>
                         <select
                             id="status"
-                            defaultValue={resource.status}
+                            defaultValue={resource.statusForm}
                             onChange={(e) => setStatus(e.target.value)}
                             className="w-full border px-2 py-1 rounded text-sm"
                         >

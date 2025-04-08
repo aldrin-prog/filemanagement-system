@@ -16,8 +16,8 @@ const UserTableContent: React.FC = () => {
           <TableCell>{resource.subject}</TableCell>
           <TableCell>{format(new Date(resource.createdAt), "MM-dd-yyyy")}</TableCell>
           <TableCell>
-            <Badge variant={resource.status === "pending" ? "outline" : "default"}>
-              {resource.status === "pending" ? "Pending" : "Processed"}
+            <Badge variant={resource.statusForm === "pending" ? "outline" : "default"}>
+              {resource.statusForm === "pending" ? "Pending" : "Processed"}
             </Badge>
           </TableCell>
           <TableCell>{resource.username && "user" || "guest"}</TableCell>

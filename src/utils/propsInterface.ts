@@ -25,7 +25,7 @@ type ResourceListType = {
   category: string;
   subject: string;
   createdAt: string;
-  status: string;
+  statusForm: string;
   files: string[];
   username: string | null;
 };

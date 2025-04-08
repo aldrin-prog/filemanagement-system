@@ -83,6 +83,8 @@ const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER_RESOURCE] });
     queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER] });
     queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER_LIST] });
+    queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.UPLOADED_FILES] });
+    queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PROCESSED_FORMS] });
   };
   const { data: uploadedFiles } = useQuery({
     queryKey: [QUERY_KEYS.UPLOADED_FILES],
@@ -113,7 +115,7 @@ const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     refetchOnWindowFocus: true,
   });
   const { data: processedForms } = useQuery({
-    queryKey: [QUERY_KEYS.RESOURCE],
+    queryKey: [QUERY_KEYS.PROCESSED_FORMS],
     queryFn: getProcessedForms,
     refetchOnWindowFocus: true,
   });
