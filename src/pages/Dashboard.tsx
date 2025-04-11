@@ -15,55 +15,11 @@ import {
 } from "recharts";
 import { FileText, Users, Upload, CheckCircle } from "lucide-react";
 import { useAppContext } from "@/context/AppContext";
-import { use, useEffect } from "react";
-
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
-
-// Reusable StatsCard Component
-interface StatsCardProps {
-  title: string;
-  icon: React.ComponentType<{ className?: string }>;
-  value: string | number;
-  description: string;
-}
-
-const StatsCard = ({ title, icon: Icon, value, description }: StatsCardProps) => (
-  <Card>
-    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-      <CardTitle className="text-sm font-medium">{title}</CardTitle>
-      <Icon className="h-4 w-4 text-muted-foreground" />
-    </CardHeader>
-    <CardContent>
-      <div className="text-2xl font-bold">{value}</div>
-      <p className="text-xs text-muted-foreground">{description}</p>
-    </CardContent>
-  </Card>
-);
-
-// Reusable ChartCard Component
-interface ChartCardProps {
-  title: string;
-  description: string;
-  children: React.ReactNode;
-}
-
-const ChartCard = ({ title, description, children }: ChartCardProps) => (
-  <Card>
-    <CardHeader>
-      <CardTitle>{title}</CardTitle>
-      <CardDescription>{description}</CardDescription>
-    </CardHeader>
-    <CardContent className="h-80">{children}</CardContent>
-  </Card>
-);
-
-// Reusable ActivityItem Component
-interface ActivityItemProps {
-  icon: React.ComponentType<{ className?: string }>;
-  title: string;
-  description: string;
-  time: string;
-}
+import StatsCard  from "@/components/StatsCard";
+import ChartCard from "@/components/ChartCard";
+import { ActivityItemProps } from "@/utils/propsInterface";
+import { useEffect } from "react";
 
 const ActivityItem = ({ icon: Icon, title, description, time }: ActivityItemProps) => (
   <div className="flex items-center gap-4 rounded-lg border p-3">
@@ -79,8 +35,7 @@ const ActivityItem = ({ icon: Icon, title, description, time }: ActivityItemProp
 );
 
 const Dashboard = () => {
-  const {userList,resources,uploadedFiles,processedForms } = useAppContext(); // Assuming you have a context to get user data
-
+  const {userList,resources,uploadedFiles,processedForms,submissions } = useAppContext(); 
   const submissionData = [
     { name: "Jan", count: 12 },
     { name: "Feb", count: 19 },
@@ -170,9 +125,9 @@ const Dashboard = () => {
             description="Number of form submissions per month"
           >
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={submissionData}>
+              <BarChart data={submissions}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
+                <XAxis dataKey="monthName" />
                 <YAxis />
                 <Tooltip />
                 <Bar dataKey="count" fill="#8884d8" />

@@ -4,7 +4,7 @@ import { fetchAuthSession } from "aws-amplify/auth";
 import { remove, downloadData,list } from "aws-amplify/storage";
 
 
-const getResources = async (): Promise<ResourceListType> => {
+const getResources = async ()=> {
   try {
     const restOperation = get({
       apiName: "resourceapi",
@@ -12,10 +12,10 @@ const getResources = async (): Promise<ResourceListType> => {
     });
     const result = await restOperation.response;
     const response = await result.body.json();
-    return response as ResourceListType;
+   
+    return response ;
   } catch (error) {
     console.error("Error", error);
-    return error as ResourceListType;
   }
 };
 
@@ -37,6 +37,7 @@ const addResource = async (resource: ResourceType, files: Array<string>) => {
     });
     const result = await restOperation.response;
     const response = await result.body.json();
+
     return response;
   } catch (error) {
     console.error("Error", error);

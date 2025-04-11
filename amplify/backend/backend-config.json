@@ -44,6 +44,38 @@
     }
   },
   "function": {
+    "categoryStreams": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "resourceDB"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "resourceStreams": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "resourceDB"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "resourceapi": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -58,6 +90,22 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_resourceStreams_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "resourceStreams"
+        }
+      ]
+    },
+    "AMPLIFY_function_resourceStreams_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "resourceStreams"
+        }
+      ]
+    },
     "AMPLIFY_function_resourceapi_deploymentBucketName": {
       "usedBy": [
         {
@@ -100,6 +148,10 @@
       "dependsOn": [],
       "providerPlugin": "awscloudformation",
       "service": "S3"
+    },
+    "submissions": {
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB"
     }
   }
 }
