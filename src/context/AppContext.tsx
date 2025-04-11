@@ -19,6 +19,7 @@ import {
   signOutUser,
 } from "@/services/userService";
 import { ResourceType } from "@/utils/propsInterface";
+import { getSummissionsData } from "@/services/dashboardService";
 
 // Define constants for query keys
 const QUERY_KEYS = {
@@ -28,6 +29,7 @@ const QUERY_KEYS = {
   USER: "user",
   UPLOADED_FILES: "uploadedFiles",
   PROCESSED_FORMS: "processedForms",
+  SUBMISSIONS: "submissions",
 };
 
 const AppContext = createContext<any>(null);
@@ -86,50 +88,53 @@ const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.UPLOADED_FILES] });
     queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PROCESSED_FORMS] });
   };
+  const { data: user, isSuccess: isUserSuccess } = useQuery({
+    queryKey: [QUERY_KEYS.USER],
+    queryFn: getUserInfo,
+  });
   const { data: uploadedFiles } = useQuery({
     queryKey: [QUERY_KEYS.UPLOADED_FILES],
     queryFn: getResourceUploadedFiles,
-    refetchOnWindowFocus: true,
+    enabled: isUserSuccess
   });
   const { data: resources } = useQuery({
     queryKey: [QUERY_KEYS.RESOURCE],
     queryFn: getResources,
-    refetchOnWindowFocus: true,
+    enabled: isUserSuccess,
   });
 
   const { data: userList } = useQuery({
     queryKey: [QUERY_KEYS.USER_LIST],
     queryFn: getUsers,
-    refetchOnWindowFocus: true,
+    enabled: isUserSuccess,
   });
 
   const { data: userResources } = useQuery({
     queryKey: [QUERY_KEYS.USER_RESOURCE],
     queryFn: getUserResources,
-    refetchOnWindowFocus: true,
+    enabled: isUserSuccess,
   });
 
-  const { data: user, isSuccess: isUserSuccess } = useQuery({
-    queryKey: [QUERY_KEYS.USER],
-    queryFn: getUserInfo,
-    refetchOnWindowFocus: true,
-  });
   const { data: processedForms } = useQuery({
     queryKey: [QUERY_KEYS.PROCESSED_FORMS],
     queryFn: getProcessedForms,
-    refetchOnWindowFocus: true,
+    enabled: isUserSuccess,
+  });
+  const {data:submissions} = useQuery({
+    queryKey: [QUERY_KEYS.SUBMISSIONS],
+    queryFn: getSummissionsData,
+    enabled: isUserSuccess,
   });
   const updateResourceStatusMutation = useMutation({
     mutationFn: ({ id, status }: { id: string; status: string }) =>
       updateResourceStatus(id, status),
     onSuccess: () => {
-      invalidateQueries(); // Use reusable function
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.RESOURCE] }); 
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER_RESOURCE] }); 
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SUBMISSIONS] }); 
     },
     onError: (error) => {
       console.error("Error updating resource status:", error); // Log error
-      alert(
-        "An error occurred while updating the resource status. Please try again."
-      ); // Provide user feedback
     },
   });
   const addResourceMutation = useMutation({
@@ -141,7 +146,10 @@ const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       files: Array<string>;
     }) => addResource(form, files),
     onSuccess: () => {
-      invalidateQueries(); // Use reusable function
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.RESOURCE] }); 
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER_RESOURCE] }); 
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.UPLOADED_FILES] }); 
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SUBMISSIONS] }); 
     },
     onError: (error) => {
       console.error("Error adding resource:", error); // Log error
@@ -152,18 +160,21 @@ const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     mutationFn: ({ id, attachments }: { id: string; attachments: string[] }) =>
       deleteResource(id, attachments),
     onSuccess: () => {
-      invalidateQueries(); // Use reusable function
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.RESOURCE] }); 
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER_RESOURCE] }); 
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.UPLOADED_FILES] }); 
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SUBMISSIONS] }); 
     },
     onError: (error) => {
       console.error("Error deleting resource:", error); // Log error
-      alert("An error occurred while deleting the resource. Please try again."); // Provide user feedback
     },
   });
 
   const userLogoutMutation = useMutation({
     mutationFn: () => signOutUser(),
     onSuccess: () => {
-      invalidateQueries(); // Use reusable function
+      // invalidateQueries().; // Use reusable function
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER] });
     },
     onError: (error) => {
       console.error("Error logging out:", error); // Log error
@@ -229,6 +240,7 @@ const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   });
   const contextValue = useMemo(
     () => ({
+      submissions,
       updateResourceStatusMutation,
       userChangeRoleMutation,
       userEnableMutation,
@@ -246,6 +258,7 @@ const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       processedForms
     }),
     [
+      submissions,
       updateResourceStatusMutation,
       userChangeRoleMutation,
       userEnableMutation,

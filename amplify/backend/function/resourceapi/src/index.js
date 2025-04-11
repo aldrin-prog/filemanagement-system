@@ -11,5 +11,6 @@ const server = awsServerlessExpress.createServer(app);
  */
 exports.handler = (event, context) => {
   console.log(`EVENT: ${JSON.stringify(event)}`);
+  console.log("This is the resource API");
   return awsServerlessExpress.proxy(server, event, context, 'PROMISE').promise;
 };

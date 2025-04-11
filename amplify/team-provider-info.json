@@ -15,13 +15,19 @@
     "categories": {
       "storage": {
         "resourceDB": {},
-        "resourcefilestorage": {}
+        "resourcefilestorage": {},
+        "submissions": {}
       },
       "function": {
         "resourceapi": {
           "deploymentBucketName": "amplify-filemanagementsystem-dev-e7b9d-deployment",
-          "s3Key": "amplify-builds/resourceapi-587a717268645851794f-build.zip"
-        }
+          "s3Key": "amplify-builds/resourceapi-43673230624c49366c67-build.zip"
+        },
+        "resourceStreams": {
+          "deploymentBucketName": "amplify-filemanagementsystem-dev-e7b9d-deployment",
+          "s3Key": "amplify-builds/resourceStreams-4257676943364d746c65-build.zip"
+        },
+        "categoryStreams": {}
       },
       "auth": {
         "filemanagementsystem29e09737": {}

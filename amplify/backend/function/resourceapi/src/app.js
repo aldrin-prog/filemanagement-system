@@ -2,8 +2,8 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
-const { getResources } = require('./controller/resourceController')
 const resourceRoutes = require('./routes/resourceRoutes');
+const dashboardRoutes = require('./routes/dashboardRoutes');
 // declare a new express app
 const app = express()
 app.use(bodyParser.json())
@@ -16,7 +16,8 @@ app.use(function(req, res, next) {
   next()
 });
 
-app.use('/api/resources',resourceRoutes)
+app.use('/api/resources',resourceRoutes);
+app.use('/api/dashboard',dashboardRoutes);
 app.listen(3000, function() {
     console.log("App started")
 });

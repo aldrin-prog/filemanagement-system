@@ -18,6 +18,13 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "function": {
+    "resourceStreams": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
     "resourceapi": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
@@ -38,6 +45,16 @@ export type AmplifyDependentResourcesAttributes = {
     "resourcefilestorage": {
       "BucketName": "string",
       "Region": "string"
+    },
+    "submissions": {
+      "Arn": "string",
+      "Name": "string",
+      "PartitionKeyName": "string",
+      "PartitionKeyType": "string",
+      "Region": "string",
+      "SortKeyName": "string",
+      "SortKeyType": "string",
+      "StreamArn": "string"
     }
   }
 }
